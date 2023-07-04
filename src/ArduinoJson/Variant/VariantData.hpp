@@ -478,7 +478,7 @@ class VariantData {
   }
 
   void setString(PoolString value, ResourceManager* resources) {
-    // setNull(resources);
+    release(resources);
     setOwnedString(value.node());
   }
 
