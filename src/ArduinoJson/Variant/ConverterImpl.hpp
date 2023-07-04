@@ -235,7 +235,7 @@ inline void convertToJson(const ::Printable& src, JsonVariant dst) {
     data->setNull();
     return;
   }
-  data->setOwnedString(print.save().node());
+  data->setString(print.save(), resources);
 }
 
 #endif
