@@ -477,6 +477,11 @@ class VariantData {
       setOwnedString(dup);
   }
 
+  void setString(PoolString value, ResourceManager* resources) {
+    setNull(resources);
+    setOwnedString(value.node());
+  }
+
   template <typename TAdaptedString>
   static void setString(VariantData* var, TAdaptedString value,
                         ResourceManager* resources) {
