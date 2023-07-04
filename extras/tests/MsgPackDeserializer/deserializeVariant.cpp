@@ -31,6 +31,9 @@ static void checkError(size_t capacity, size_t timebombCountDown,
 
   CAPTURE(input);
   REQUIRE(error == expected);
+
+  if (expected == DeserializationError::NoMemory)
+    REQUIRE(doc.overflowed() == true);
 }
 
 TEST_CASE("deserialize MsgPack value") {

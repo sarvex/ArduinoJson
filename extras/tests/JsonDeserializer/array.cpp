@@ -273,6 +273,7 @@ TEST_CASE("deserialize JSON array under memory constraints") {
     DeserializationError err = deserializeJson(doc, input);
 
     REQUIRE(err == DeserializationError::NoMemory);
+    REQUIRE(doc.overflowed() == true);
   }
 
   SECTION("buffer of the right size for an array with one element") {
@@ -291,6 +292,7 @@ TEST_CASE("deserialize JSON array under memory constraints") {
     DeserializationError err = deserializeJson(doc, input);
 
     REQUIRE(err == DeserializationError::NoMemory);
+    REQUIRE(doc.overflowed() == true);
   }
 
   SECTION("buffer of the right size for an array with a nested object") {

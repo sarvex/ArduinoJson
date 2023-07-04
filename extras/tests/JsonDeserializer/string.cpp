@@ -106,6 +106,7 @@ TEST_CASE("Allocation of the key fails") {
   SECTION("Quoted string, first member") {
     REQUIRE(deserializeJson(doc, "{\"example\":1}") ==
             DeserializationError::NoMemory);
+    REQUIRE(doc.overflowed() == true);
     REQUIRE(spyingAllocator.log() ==
             AllocatorLog() << AllocatorLog::Allocate(1024)
                            << AllocatorLog::AllocateFail(sizeofString(31)));
@@ -115,6 +116,7 @@ TEST_CASE("Allocation of the key fails") {
     timebombAllocator.setCountdown(2);
     REQUIRE(deserializeJson(doc, "{\"hello\":1,\"world\"}") ==
             DeserializationError::NoMemory);
+    REQUIRE(doc.overflowed() == true);
     REQUIRE(spyingAllocator.log() ==
             AllocatorLog() << AllocatorLog::Allocate(1024)
                            << AllocatorLog::Allocate(sizeofString(31))
@@ -126,6 +128,7 @@ TEST_CASE("Allocation of the key fails") {
   SECTION("Non-Quoted string, first member") {
     REQUIRE(deserializeJson(doc, "{example:1}") ==
             DeserializationError::NoMemory);
+    REQUIRE(doc.overflowed() == true);
     REQUIRE(spyingAllocator.log() ==
             AllocatorLog() << AllocatorLog::Allocate(1024)
                            << AllocatorLog::AllocateFail(sizeofString(31)));
@@ -135,6 +138,7 @@ TEST_CASE("Allocation of the key fails") {
     timebombAllocator.setCountdown(2);
     REQUIRE(deserializeJson(doc, "{hello:1,world}") ==
             DeserializationError::NoMemory);
+    REQUIRE(doc.overflowed() == true);
     REQUIRE(spyingAllocator.log() ==
             AllocatorLog() << AllocatorLog::Allocate(1024)
                            << AllocatorLog::Allocate(sizeofString(31))
@@ -151,6 +155,7 @@ TEST_CASE("String allocation fails") {
   SECTION("Input is const char*") {
     REQUIRE(deserializeJson(doc, "\"hello\"") ==
             DeserializationError::NoMemory);
+    REQUIRE(doc.overflowed() == true);
     REQUIRE(spyingAllocator.log() ==
             AllocatorLog() << AllocatorLog::AllocateFail(sizeofString(31)));
   }
