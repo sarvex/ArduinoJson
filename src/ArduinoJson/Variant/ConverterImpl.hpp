@@ -192,35 +192,35 @@ struct Converter<decltype(nullptr)> : private detail::VariantAttorney {
 namespace detail {
 class StringBuilderPrint : public Print {
  public:
-  StringBuilderPrint(ResourceManager* resources) : copier_(resources) {
-    copier_.startString();
+  StringBuilderPrint(ResourceManager* resources) : builder_(resources) {
+    builder_.startString();
   }
 
   StringNode* save() {
     ARDUINOJSON_ASSERT(!overflowed());
-    return copier_.save();
+    return builder_.save();
   }
 
   size_t write(uint8_t c) {
-    copier_.append(char(c));
-    return copier_.isValid() ? 1 : 0;
+    builder_.append(char(c));
+    return builder_.isValid() ? 1 : 0;
   }
 
   size_t write(const uint8_t* buffer, size_t size) {
     for (size_t i = 0; i < size; i++) {
-      copier_.append(char(buffer[i]));
-      if (!copier_.isValid())
+      builder_.append(char(buffer[i]));
+      if (!builder_.isValid())
         return i;
     }
     return size;
   }
 
   bool overflowed() const {
-    return !copier_.isValid();
+    return !builder_.isValid();
   }
 
  private:
-  StringBuilder copier_;
+  StringBuilder builder_;
 };
 }  // namespace detail
 

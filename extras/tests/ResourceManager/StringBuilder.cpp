@@ -15,10 +15,10 @@ TEST_CASE("StringBuilder") {
   ResourceManager resources(0, &spyingAllocator);
 
   SECTION("Empty string") {
-    StringBuilder str(&resources);
+    StringBuilder builder(&resources);
 
-    str.startString();
-    str.save();
+    builder.startString();
+    builder.save();
 
     REQUIRE(resources.size() == sizeofString(0));
     REQUIRE(resources.overflowed() == false);
@@ -29,28 +29,28 @@ TEST_CASE("StringBuilder") {
   }
 
   SECTION("Short string fits in first allocation") {
-    StringBuilder str(&resources);
+    StringBuilder builder(&resources);
 
-    str.startString();
-    str.append("hello");
+    builder.startString();
+    builder.append("hello");
 
-    REQUIRE(str.isValid() == true);
-    REQUIRE(str.str() == "hello");
+    REQUIRE(builder.isValid() == true);
+    REQUIRE(builder.str() == "hello");
     REQUIRE(resources.overflowed() == false);
     REQUIRE(spyingAllocator.log() ==
             AllocatorLog() << AllocatorLog::Allocate(sizeofString(31)));
   }
 
   SECTION("Long string needs reallocation") {
-    StringBuilder str(&resources);
+    StringBuilder builder(&resources);
 
-    str.startString();
-    str.append(
+    builder.startString();
+    builder.append(
         "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do "
         "eiusmod tempor incididunt ut labore et dolore magna aliqua.");
 
-    REQUIRE(str.isValid() == true);
-    REQUIRE(str.str() ==
+    REQUIRE(builder.isValid() == true);
+    REQUIRE(builder.str() ==
             "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do "
             "eiusmod tempor incididunt ut labore et dolore magna aliqua.");
     REQUIRE(resources.overflowed() == false);
@@ -63,11 +63,11 @@ TEST_CASE("StringBuilder") {
   }
 
   SECTION("Realloc fails") {
-    StringBuilder str(&resources);
+    StringBuilder builder(&resources);
 
-    str.startString();
+    builder.startString();
     controllableAllocator.disable();
-    str.append(
+    builder.append(
         "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do "
         "eiusmod tempor incididunt ut labore et dolore magna aliqua.");
 
@@ -76,17 +76,17 @@ TEST_CASE("StringBuilder") {
                            << AllocatorLog::ReallocateFail(sizeofString(31),
                                                            sizeofString(63))
                            << AllocatorLog::Deallocate(sizeofString(31)));
-    REQUIRE(str.isValid() == false);
+    REQUIRE(builder.isValid() == false);
     REQUIRE(resources.overflowed() == true);
   }
 
   SECTION("Initial allocation fails") {
-    StringBuilder str(&resources);
+    StringBuilder builder(&resources);
 
     controllableAllocator.disable();
-    str.startString();
+    builder.startString();
 
-    REQUIRE(str.isValid() == false);
+    REQUIRE(builder.isValid() == false);
     REQUIRE(resources.overflowed() == true);
     REQUIRE(spyingAllocator.log() ==
             AllocatorLog() << AllocatorLog::AllocateFail(sizeofString(31)));
@@ -94,10 +94,10 @@ TEST_CASE("StringBuilder") {
 }
 
 static StringNode* addStringToPool(ResourceManager& resources, const char* s) {
-  StringBuilder str(&resources);
-  str.startString();
-  str.append(s);
-  return str.save();
+  StringBuilder builder(&resources);
+  builder.startString();
+  builder.append(s);
+  return builder.save();
 }
 
 TEST_CASE("StringBuilder::save() deduplicates strings") {

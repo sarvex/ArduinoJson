@@ -11,13 +11,13 @@ using namespace ArduinoJson::detail;
 
 static void testCodepoint(uint32_t codepoint, std::string expected) {
   ResourceManager resources(4096);
-  StringBuilder str(&resources);
-  str.startString();
+  StringBuilder builder(&resources);
+  builder.startString();
 
   CAPTURE(codepoint);
-  Utf8::encodeCodepoint(codepoint, str);
+  Utf8::encodeCodepoint(codepoint, builder);
 
-  REQUIRE(str.str().c_str() == expected);
+  REQUIRE(builder.str().c_str() == expected);
 }
 
 TEST_CASE("Utf8::encodeCodepoint()") {
