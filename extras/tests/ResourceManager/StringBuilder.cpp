@@ -97,7 +97,7 @@ static StringNode* addStringToPool(ResourceManager& resources, const char* s) {
   StringBuilder builder(&resources);
   builder.startString();
   builder.append(s);
-  return builder.save();
+  return builder.save().node();
 }
 
 TEST_CASE("StringBuilder::save() deduplicates strings") {

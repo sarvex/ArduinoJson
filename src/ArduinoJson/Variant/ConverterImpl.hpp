@@ -196,7 +196,7 @@ class StringBuilderPrint : public Print {
     builder_.startString();
   }
 
-  StringNode* save() {
+  PoolString save() {
     ARDUINOJSON_ASSERT(!overflowed());
     return builder_.save();
   }
@@ -235,7 +235,7 @@ inline void convertToJson(const ::Printable& src, JsonVariant dst) {
     data->setNull();
     return;
   }
-  data->setOwnedString(print.save());
+  data->setOwnedString(print.save().node());
 }
 
 #endif

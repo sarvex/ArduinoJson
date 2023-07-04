@@ -390,7 +390,7 @@ class JsonDeserializer {
     if (err)
       return err;
 
-    variant.setOwnedString(stringBuilder_.save());
+    variant.setOwnedString(stringBuilder_.save().node());
 
     return DeserializationError::Ok;
   }

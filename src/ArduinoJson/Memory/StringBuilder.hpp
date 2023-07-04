@@ -25,7 +25,7 @@ class StringBuilder {
       node_ = resources_->createString(initialCapacity);
   }
 
-  StringNode* save() {
+  PoolString save() {
     ARDUINOJSON_ASSERT(node_ != nullptr);
     node_->data[size_] = 0;
     StringNode* node = resources_->getString(adaptString(node_->data, size_));

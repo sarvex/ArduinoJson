@@ -54,4 +54,42 @@ constexpr size_t sizeofString(size_t n) {
   return StringNode::sizeForLength(n);
 }
 
+// A string adapter for StringNode
+class PoolString {
+ public:
+  static const size_t typeSortKey = 4;
+
+  PoolString(StringNode* node) : node_(node) {}
+
+  bool isNull() const {
+    return !node_;
+  }
+
+  bool isLinked() const {
+    return false;
+  }
+
+  size_t size() const {
+    ARDUINOJSON_ASSERT(node_);
+    return node_->length;
+  }
+
+  char operator[](size_t i) const {
+    ARDUINOJSON_ASSERT(node_);
+    return node_->data[i];
+  }
+
+  const char* data() const {
+    ARDUINOJSON_ASSERT(node_);
+    return node_->data;
+  }
+
+  StringNode* node() {
+    return node_;
+  }
+
+ private:
+  StringNode* node_;
+};
+
 ARDUINOJSON_END_PRIVATE_NAMESPACE

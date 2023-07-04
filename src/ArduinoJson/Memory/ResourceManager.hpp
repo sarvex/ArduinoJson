@@ -87,6 +87,10 @@ class ResourceManager {
     return node;
   }
 
+  StringNode* saveString(PoolString str) {
+    return str.node();
+  }
+
   void saveString(StringNode* node) {
     stringPool_.add(node);
   }
